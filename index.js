@@ -7,15 +7,25 @@ const router = require('./routes');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
+const handlebars = require('handlebars');
+const exphbs = require('express-handlebars');
+const {allowInsecurePrototypeAccess} = require('@handlebars/allow-prototype-access');
 
 require('dotenv').config({ path: 'variables.env'});
 
 const app = express();
 
+//Habilitar body-parser
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+
 //Habilitar handlebars como view
 app.engine('handlebars', 
     engine({
-        defaultLayout: 'layout'
+        handlebars: allowInsecurePrototypeAccess(handlebars),
+        defaultLayout: 'layout',
+        helpers: require('./helpers/handlebars')
     })
 );
 app.set('view engine', 'handlebars');

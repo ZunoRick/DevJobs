@@ -4,7 +4,9 @@
   "description": "Portal DevJobs con NodeJS, Handlebars Mongoose",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon ./index"
+    "dev": "nodemon ./index",
+    "start": "concurrently \"npm run dev\" \" npm run watch\"",
+    "watch": "webpack -w --mode development"
   },
   "repository": {
     "type": "git",
@@ -17,18 +19,26 @@
   },
   "homepage": "https://github.com/ZunoRick/DevJobs#readme",
   "dependencies": {
+    "@handlebars/allow-prototype-access": "^1.0.5",
+    "concurrently": "^6.4.0",
     "connect-mongo": "^4.6.0",
     "cookie-parser": "^1.4.6",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "express-handlebars": "^6.0.1",
     "express-session": "^1.17.2",
+    "handlebars": "^4.7.7",
     "mongoose": "^6.0.13",
     "session": "^0.1.0",
     "shortid": "^2.2.16",
     "slug": "^5.1.0"
   },
   "devDependencies": {
-    "nodemon": "^2.0.15"
+    "@babel/core": "^7.16.0",
+    "@babel/preset-env": "^7.16.4",
+    "babel-loader": "^8.2.3",
+    "nodemon": "^2.0.15",
+    "webpack": "^5.64.2",
+    "webpack-cli": "^4.9.1"
   }
 }
