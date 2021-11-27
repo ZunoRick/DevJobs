@@ -11,6 +11,7 @@ const handlebars = require('handlebars');
 const exphbs = require('express-handlebars');
 const {allowInsecurePrototypeAccess} = require('@handlebars/allow-prototype-access');
 const flash = require('connect-flash');
+const passport = require('./config/passport');
 
 require('dotenv').config({ path: 'variables.env'});
 
@@ -42,6 +43,10 @@ app.use(session({
     saveUninitialized: false,
     store: MongoStore.create({mongoUrl: process.env.DATABASE})
 }));
+
+//Inicializar Passport
+app.use(passport.initialize());
+app.use(passport. session());
 
 //Alertas y flash messeges
 app. use(flash());
