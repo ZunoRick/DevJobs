@@ -10,6 +10,7 @@ const MongoStore = require('connect-mongo');
 const handlebars = require('handlebars');
 const exphbs = require('express-handlebars');
 const {allowInsecurePrototypeAccess} = require('@handlebars/allow-prototype-access');
+const flash = require('connect-flash');
 
 require('dotenv').config({ path: 'variables.env'});
 
@@ -18,7 +19,6 @@ const app = express();
 //Habilitar body-parser
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
 
 //Habilitar handlebars como view
 app.engine('handlebars', 
@@ -42,6 +42,15 @@ app.use(session({
     saveUninitialized: false,
     store: MongoStore.create({mongoUrl: process.env.DATABASE})
 }));
+
+//Alertas y flash messeges
+app. use(flash());
+
+//Crear nuestro middleware
+app.use((req, res, next) => {
+    res.locals.mensajes = req.flash();
+    next();
+});
 
 app.use('/', router());
 

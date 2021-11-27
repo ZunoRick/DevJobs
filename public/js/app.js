@@ -1,5 +1,13 @@
 document.addEventListener('DOMContentLoaded',  () => {
     const skills = document.querySelector('.lista-conocimientos');
+
+    //Limpiar las alertas
+    let alertas = document.querySelector('.alertas');
+
+    if (alertas) {
+        limpiarAlertas(alertas);
+    }
+
     if (skills) {
         skills.addEventListener('click', agregarSkills);
 
@@ -36,4 +44,15 @@ const skillsSeleccionados = () =>{
     //inyectarlo en el hidden
     const skillsArray = [...skills];
     document.querySelector('#skills').value = skillsArray;
+}
+
+const limpiarAlertas = (alertas) =>{
+    const interval = setInterval(() => {
+        if (alertas.children.length > 0) {
+            alertas.removeChild(alertas.children[0]);
+        } else if(alertas.children.length === 0){
+            alertas.parentElement.removeChild(alertas);
+            clearInterval(interval);
+        }
+    }, 2000);
 }
