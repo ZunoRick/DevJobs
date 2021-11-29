@@ -27,7 +27,7 @@ module.exports = () =>{
         vacantesController.formEditarVacante
     );
     router.post('/vacantes/editar/:url', 
-        authController.verificarUsuario,
+        authController.verificarUsuario, 
         vacantesController.editarVacante
     );
 
@@ -42,10 +42,26 @@ module.exports = () =>{
     router.get('/iniciar-sesion', usuariosController.formIniciarSesion);
     router.post('/iniciar-sesion', authController.autenticarUsuario);
 
+    //Cerrar Sesión
+    router.get('/cerrar-sesion', 
+        authController.verificarUsuario,
+        authController.cerrarSesion
+    );
+
     //Panel de administración
     router.get('/administracion', 
         authController.verificarUsuario,
         authController.mostrarPanel
+    );
+
+    //Editar Perfil
+    router.get('/editar-perfil', 
+        authController.verificarUsuario,
+        usuariosController.formEditarPerfil    
+    );
+    router.post('/editar-perfil', 
+        authController.verificarUsuario,
+        usuariosController.editarPerfil    
     );
 
     return router;

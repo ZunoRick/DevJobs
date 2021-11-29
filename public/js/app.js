@@ -54,5 +54,5 @@ const limpiarAlertas = (alertas) =>{
             alertas.parentElement.removeChild(alertas);
             clearInterval(interval);
         }
-    }, 2000);
+    }, 3000);
 }

@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const Usuarios = mongoose.model('Usuarios');
-const { body, validationResult } = require('express-validator');
+const { validationResult } = require('express-validator');
+const { validarFormRegistro, formEditarPerfil } = require('./../helpers/funciones');
 
 exports.formCrearCuenta = (req, res) => {
 	res.render('crear-cuenta', {
@@ -12,31 +13,7 @@ exports.formCrearCuenta = (req, res) => {
 
 exports.validarRegistro = async (req, res, next) => {
 	//sanitizar los campos
-	const rules = [
-		body('nombre')
-			.not()
-			.isEmpty()
-            .trim()
-			.withMessage('El nombre es obligatorio')
-			.escape(),
-		body('email')
-			.isEmail()
-			.withMessage('El email es obligatorio')
-			.normalizeEmail(),
-		body('password')
-			.not()
-			.isEmpty()
-			.withMessage('El password es obligatorio')
-			.escape(),
-		body('confirmar')
-			.not()
-			.isEmpty()
-			.withMessage('Confirmar password es obligatorio')
-			.escape(),
-		body('confirmar')
-			.equals(req.body.password)
-			.withMessage('Los passwords no son iguales'),
-	];
+	const rules = validarFormRegistro(req);
 
 	await Promise.all(rules.map((validation) => validation.run(req)));
 	const errores = validationResult(req);
@@ -78,4 +55,51 @@ exports.formIniciarSesion = (req, res) => {
 	res.render('iniciar-sesion', {
 		nombrePagina: 'Iniciar Sesión devJobs'
 	});
+}
+
+exports.formEditarPerfil = async (req, res) =>{
+	const usuario = await Usuarios.findOne({ email: req.user.email });
+	res.render('editar-perfil', {
+		nombrePagina: 'Edita tu Perfil de devJobs',
+		usuario,
+		cerrarSesion: true,
+        nombre: req.user.nombre,
+	});
+}
+
+//Guardar cambios editar perfil
+exports.editarPerfil = async (req, res) =>{
+	const usuario = await Usuarios.findById(req.user._id);
+
+	//sanitizar los campos
+	const rules = formEditarPerfil();
+
+	await Promise.all(rules.map((validation) => validation.run(req)));
+	const errores = validationResult(req);
+	if (!errores.isEmpty()) {
+		req.flash(
+			'error',
+			errores.array().map((error) => error.msg)
+		);
+		res.render('editar-perfil', {
+			nombrePagina: 'Edita tu Perfil de devJobs',
+			usuario: req.user,
+			cerrarSesion: true,
+			nombre: req.user.nombre,
+			mensajes: req.flash(),
+		});
+		return;
+	}
+
+	usuario.nombre = req.body.nombre;
+	usuario.email = req.body.email;
+
+	if(req.body.password){
+		usuario.password = req.body.password;
+	}
+
+	await usuario.save();
+
+	req.flash('correcto', 'Cambios guardados Correctamente');
+	res.redirect('/administracion');
 }
