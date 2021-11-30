@@ -20,6 +20,7 @@
   "homepage": "https://github.com/ZunoRick/DevJobs#readme",
   "dependencies": {
     "@handlebars/allow-prototype-access": "^1.0.5",
+    "axios": "^0.24.0",
     "bcrypt": "^5.0.1",
     "concurrently": "^6.4.0",
     "connect-flash": "^0.1.1",
@@ -36,7 +37,8 @@
     "passport-local": "^1.0.0",
     "session": "^0.1.0",
     "shortid": "^2.2.16",
-    "slug": "^5.1.0"
+    "slug": "^5.1.0",
+    "sweetalert2": "^11.2.1"
   },
   "devDependencies": {
     "@babel/core": "^7.16.0",
