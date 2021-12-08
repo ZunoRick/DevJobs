@@ -18,7 +18,7 @@ exports.subirImagen = (req, res, next) => {
 			} else{
 				req.flash('error', error.message);
 			}
-			res.redirect('administracion');
+			res.redirect('/administracion');
 			return;
 		}else{
 			return next();
