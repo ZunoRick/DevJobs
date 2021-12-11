@@ -91,5 +91,8 @@ module.exports = () =>{
         vacantesController.mostrarCandidatos
     );
 
+    //Buscador de Vacantes
+    router.post('/buscador', vacantesController.buscarVacantes)
+
     return router;
 }

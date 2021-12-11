@@ -11,6 +11,7 @@ const handlebars = require('handlebars');
 const exphbs = require('express-handlebars');
 const {allowInsecurePrototypeAccess} = require('@handlebars/allow-prototype-access');
 const flash = require('connect-flash');
+const createError = require('http-errors');
 const passport = require('./config/passport');
 
 require('dotenv').config({ path: 'variables.env'});
@@ -59,4 +60,24 @@ app.use((req, res, next) => {
 
 app.use('/', router());
 
-app.listen(process.env.PUERTO);
+//404 página no existente
+app.use((req, res, next) => {
+    next(createError(404, 'No Encontrado'));
+});
+
+//Administración de los errores
+app.use((error, req, res, next) => {
+    res.locals.mensaje = error.message;
+    const status = error.status || 500;
+    res.locals.status = status;
+    res.status(status);
+    res.render('error');
+});
+
+//Heroku asigne el puerto a la aplicación
+const host = '0.0.0.0';
+const port = process.env.PORT;
+
+app.listen(port, host, () => {
+    console.log('El servidor está funcionando');
+});
